@@ -8,5 +8,5 @@ set -euo pipefail
 sudo dnf copr enable sdegler/hyprland -y
 sudo dnf install -y \
   gcc gcc-c++ make pkgconf-pkg-config \
-  pixman-devel libdrm-devel hyprland-devel pangocairo-devel \
+  pixman-devel libdrm-devel hyprland-devel pango-devel \
   libinput-devel systemd-devel wayland-devel libxkbcommon-devel
