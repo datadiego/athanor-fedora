@@ -222,7 +222,6 @@ def tokens(
         "term_font_italic": f"{face.italic}:style=Italic:pixelsize={px}"
         if face.italic
         else f"{face.family}:pixelsize={px}",
-        "font_size_adjustment": "100%" if font in config.PIXEL_FONTS else "0.5",
     }
 
 

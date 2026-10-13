@@ -101,7 +101,7 @@ def test_icons_fall_back_to_a_smaller_unsmoothed_face(tmp_path):
     assert foot.count(icons) == 4
 
 
-def test_terminal_size_snaps_and_keeps_the_zoom_x2(tmp_path):
+def test_terminal_size_snaps_a_pixel_face(tmp_path):
     scheme = palette.load("umber")
     toks = transmute.tokens(
         scheme, (1920, 1080), None, tmp_path / "s.png", "x", "tandy", terminal_size=32
@@ -111,7 +111,7 @@ def test_terminal_size_snaps_and_keeps_the_zoom_x2(tmp_path):
     assert "font=Px437 Tandy2K:pixelsize=32" in foot
     assert "font-bold=Px437 AT&T PC6300:pixelsize=32" in foot
     assert ",Symbols Nerd Font Mono:pixelsize=24:antialias=false:rgba=none\n" in foot
-    assert "font-size-adjustment=100%\n" in foot
+    assert "font-size-adjustment" not in foot
 
 
 def test_terminal_size_leaves_a_vector_face_unsnapped(tmp_path):
@@ -122,7 +122,7 @@ def test_terminal_size_leaves_a_vector_face_unsnapped(tmp_path):
     render.render_tree(tmp_path / "out", toks)
     foot = (tmp_path / "out/foot/foot.ini").read_text()
     assert "font=Terminus (TTF):pixelsize=24" in foot
-    assert "font-size-adjustment=0.5\n" in foot
+    assert "font-size-adjustment" not in foot
 
 
 def test_foot_colors_use_sections_foot_accepts(tmp_path):

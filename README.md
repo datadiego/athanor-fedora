@@ -86,6 +86,7 @@ Super+Shift+E asks before quitting Hyprland. Run `athanor guide` for the rest.
 On Fedora:
 
 ```sh
+sudo dnf install make stow -y
 git clone https://github.com/datadiego/athanor-fedora
 cd athanor-fedora
 make install
@@ -121,7 +122,7 @@ The terminal uses a pixel font, `tandy` by default. Pick another with
 `terminal_font` under `[display]` in `athanor.toml` and size it with
 `terminal_size` (px, 0 for the face's native size), then `make render`. The
 pixel faces (tandy, compaq, vga) snap to the nearest multiple of their 8×16
-grid, and `Ctrl+plus` zooms in crisp steps (16 → 32 → 64).
+grid, so pick 16, 32 or 48 to keep them crisp.
 
 Without Hyprland, `./install.sh shell` installs just the command, the prompt and
 the fonts. `./install.sh --uninstall` removes everything.

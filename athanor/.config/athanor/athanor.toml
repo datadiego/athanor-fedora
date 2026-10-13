@@ -26,9 +26,8 @@ levels = true
 # tandy, terminus, cozette, compaq or vga. Applies at the next transmute.
 terminal_font = "tandy"
 # Terminal font size in px. 0 uses the face's native size. The pixel faces
-# (tandy, compaq, vga) snap to the nearest multiple of their grid; terminus
-# and cozette scale freely. Ctrl+plus zooms in crisp steps. Applies at the
-# next transmute.
+# (tandy, compaq, vga) snap to the nearest multiple of their grid (16, 32,
+# 48...); terminus and cozette scale freely. Applies at the next transmute.
 terminal_size = 0
 
 [transmute]
