@@ -8,18 +8,13 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 INSTALL = ROOT / "install.sh"
-EVERYTHING = (
-    "zsh uv imagemagick curl unzip fontconfig perl stow hyprland hyprlock hypridle waybar mako"
-    " fuzzel foot swaybg libnotify grim slurp wl-clipboard"
-)
 
 STUBS = {
     "sudo": 'echo "sudo $*" >> "$LOG"',
-    "pacman": """[[ $1 == -Q ]] && { [[ " $INSTALLED " == *" $2 "* ]]; exit; }
-echo "pacman $*" >> "$LOG\"""",
     "dnf": 'echo "dnf $*" >> "$LOG"',
     "systemctl": 'echo "systemctl $*" >> "$LOG"',
     "fc-cache": "true",
+    "fc-list": "true",
     "tar": "true",
     "perl": "true",
     "curl": 'while [[ $# -gt 0 ]]; do [[ $1 == -o ]] && { touch "$2"; shift; }; shift; done',
@@ -46,8 +41,7 @@ def system(tmp_path):
     bin_dir.mkdir()
     for name, body in STUBS.items():
         path = bin_dir / name
-        tail = "" if name == "pacman" else "exit 0\n"
-        path.write_text(f"#!/usr/bin/env bash\n{body}\n{tail}")
+        path.write_text(f"#!/usr/bin/env bash\n{body}\nexit 0\n")
         path.chmod(path.stat().st_mode | stat.S_IEXEC)
     zsh = shutil.which("zsh")
     if zsh:
@@ -61,21 +55,13 @@ class Home:
         self.log = path / "log"
         path.mkdir()
 
-    def run(
-        self,
-        *args: str,
-        managed: str = "",
-        installed: str = EVERYTHING,
-        distro: str = "arch",
-    ) -> str:
+    def run(self, *args: str, managed: str = "") -> str:
         env = {
             "HOME": str(self.path),
             "PATH": f"{self.stubs}:/usr/bin:/bin",
             "LOG": str(self.log),
             "SHELL": "/usr/bin/zsh",
-            "INSTALLED": installed,
             "MANAGED": managed,
-            "ATHANOR_DISTRO": distro,
         }
         done = subprocess.run(
             ["bash", str(INSTALL), *args], env=env, capture_output=True, text=True, timeout=60
@@ -123,14 +109,9 @@ def test_shell_layer_in_a_fresh_home(home):
     assert (home / ".local/share/fonts/athanor/Px437_Tandy2K.ttf").exists()
     assert (home / ".local/share/fonts/athanor/t0-16i-uni.bdf").exists()
     assert not (home / ".config/hypr").exists()
-    assert "pacman -S --needed" not in home.log.read_text()
-
-
-def test_only_missing_packages_are_installed_and_nothing_is_upgraded(home):
-    home.run("shell", installed="zsh uv curl unzip fontconfig perl stow")
-    log = home.log.read_text()
-    assert "sudo pacman -S --needed imagemagick\n" in log
-    assert "-Syu" not in log and "-Sy " not in log
+    assert "sudo dnf install -y zsh ImageMagick curl unzip fontconfig perl stow" in (
+        home.log.read_text()
+    )
 
 
 def test_running_twice_changes_nothing(home):
@@ -254,7 +235,7 @@ def test_the_notch_is_built_only_when_asked_for(home):
     home.run()
     notch = home / ".local/share/athanor/athanor-notch.so"
     assert not notch.exists()
-    out = home.run("notch", installed=EVERYTHING + " gcc make pkgconf")
+    out = home.run("notch")
     assert notch.is_file() and not notch.with_name("athanor-notch.so.new").exists()
     assert f"make -s -C {ROOT}/plugin" in home.log.read_text()
     assert f"hyprctl plugin load {notch}" in out
@@ -263,7 +244,8 @@ def test_the_notch_is_built_only_when_asked_for(home):
 def test_the_notch_brings_the_desktop_and_its_compiler(home):
     home.run("notch")
     assert (home / ".config/hypr/hyprland.lua").exists()
-    assert "gcc make pkgconf" in home.log.read_text()
+    assert "sudo dnf copr enable sdegler/hyprland -y" in home.log.read_text()
+    assert "hyprland-devel" in home.log.read_text()
 
 
 def test_uninstall_takes_the_notch(home):
@@ -283,17 +265,8 @@ def test_vga_and_compaq_get_an_overstrike_bold_once(home):
     assert home.log.read_text().count("tools/overstrike.py") == 2
 
 
-def test_fedora_shell_uses_dnf_and_stow(home):
-    home.run("shell", distro="fedora", installed="")
-    log = home.log.read_text()
-    assert "sudo dnf install -y zsh ImageMagick curl unzip fontconfig perl stow" in log
-    assert "pacman" not in log
-    assert (home / ".config/athanor/athanor.zsh").is_symlink()
-    assert not (home / ".config/hypr").exists()
-
-
-def test_fedora_desktop_enables_the_hyprland_copr(home):
-    home.run("desktop", distro="fedora", installed="")
+def test_desktop_enables_the_hyprland_copr(home):
+    home.run("desktop")
     log = home.log.read_text()
     assert "sudo dnf copr enable sdegler/hyprland -y" in log
     assert (home / ".config/athanor/hypr/athanor.lua").is_symlink()

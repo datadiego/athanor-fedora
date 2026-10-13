@@ -67,10 +67,10 @@ def test_workspace_events_trigger_a_redraw():
 
 
 def test_sick_only_while_the_running_kernels_modules_are_gone(tmp_path):
-    (tmp_path / "6.17.1-arch1-1").mkdir()
-    assert not status.sick(tmp_path, "6.17.1-arch1-1")
-    assert status.sick(tmp_path, "6.16.9-arch1-1")
-    assert not status.sick(tmp_path / "nowhere", "6.16.9-arch1-1")
+    (tmp_path / "6.17.1-200.fc44.x86_64").mkdir()
+    assert not status.sick(tmp_path, "6.17.1-200.fc44.x86_64")
+    assert status.sick(tmp_path, "6.16.9-200.fc44.x86_64")
+    assert not status.sick(tmp_path / "nowhere", "6.16.9-200.fc44.x86_64")
 
 
 def test_sick_ends_the_line_and_explains_itself():

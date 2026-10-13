@@ -1,6 +1,6 @@
 ![athanor](docs/screenshots/banner.png)
 
-Athanor is an alchemical layer for Arch and Hyprland, inspired by Western
+Athanor is an alchemical layer for Fedora and Hyprland, inspired by Western
 esotericism and dungeon crawling.
 
 ![Umber](docs/screenshots/desktop-umber.png)
@@ -94,7 +94,7 @@ make install
 `make install` installs the system packages (Hyprland comes from the
 `sdegler/hyprland` COPR), fetches the fonts, installs the `athanor` command
 with `uv` and links the dotfiles into `~/.config` with `stow` from the
-`athanor/` tree. On Arch the same entry point still uses `pacman`.
+`athanor/` tree.
 
 | target | what it does |
 |---|---|
@@ -116,6 +116,12 @@ own settings load after the block and override it.
 
 The prompt names each terminal window after its folder, or after the command
 running in it. Set `ATHANOR_TITLE=0` in your `.zshrc` to keep your own titles.
+
+The terminal uses a pixel font, `tandy` by default. Pick another with
+`terminal_font` under `[display]` in `athanor.toml` and size it with
+`terminal_size` (px, 0 for the face's native size), then `make render`. The
+pixel faces (tandy, compaq, vga) snap to the nearest multiple of their 8×16
+grid, and `Ctrl+plus` zooms in crisp steps (16 → 32 → 64).
 
 Without Hyprland, `./install.sh shell` installs just the command, the prompt and
 the fonts. `./install.sh --uninstall` removes everything.

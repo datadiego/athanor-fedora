@@ -40,32 +40,6 @@ markers() {
   end="$c <<< athanor <<<"
 }
 
-shell_packages=(zsh uv imagemagick curl unzip fontconfig perl stow)
-desktop_packages=(
-  hyprland hyprlock hypridle waybar mako fuzzel foot ttf-nerd-fonts-symbols-mono hyprpaper swaybg
-  libnotify grim slurp wl-clipboard brightnessctl playerctl
-)
-notch_packages=(gcc make pkgconf)
-
-# Fedora no trae Hyprland en sus repos: lo cubre scripts/desktop.sh (COPR de
-# sdegler). En Arch se instala con pacman como siempre.
-distro() {
-  if [[ -n ${ATHANOR_DISTRO:-} ]]; then
-    printf '%s' "$ATHANOR_DISTRO"
-    return
-  fi
-  if [[ -r /etc/os-release ]]; then
-    local id
-    # shellcheck source=/dev/null
-    id=$(. /etc/os-release 2>/dev/null; printf '%s' "${ID:-}")
-    case $id in
-      fedora | rhel | centos | rocky | almalinux) printf 'fedora'; return ;;
-    esac
-  fi
-  command -v pacman >/dev/null && { printf 'arch'; return; }
-  printf 'unknown'
-}
-
 dry=0 mode=install purge=0 fresh_fonts=0
 layers=()
 for arg in "$@"; do
@@ -233,44 +207,16 @@ legacy_links=(
   "$config/mako/config" "$config/fuzzel/fuzzel.ini"
 )
 
+# Each layer's packages live in its script (dnf + the Hyprland COPR).
 install_packages() {
-  local layer=$1 wanted=() missing=() p script
+  local layer=$1 script
   case $layer in
-    shell)
-      wanted=("${shell_packages[@]}")
-      script=common
-      ;;
-    desktop)
-      wanted=("${desktop_packages[@]}")
-      script=desktop
-      ;;
-    notch)
-      wanted=("${notch_packages[@]}")
-      script=notch
-      ;;
+    shell) script=common ;;
+    desktop) script=desktop ;;
+    notch) script=notch ;;
   esac
-  case $(distro) in
-    fedora)
-      say "installing the $layer packages"
-      run bash "$root/scripts/$script.sh"
-      ;;
-    arch)
-      command -v pacman >/dev/null || {
-        warn "No pacman here. Install these yourself: ${wanted[*]}"
-        return 0
-      }
-      for p in "${wanted[@]}"; do
-        pacman -Q "$p" >/dev/null 2>&1 || missing+=("$p")
-      done
-      ((${#missing[@]})) || return 0
-      # No -y so this never does a partial upgrade.
-      say "installing ${missing[*]}"
-      run sudo pacman -S --needed "${missing[@]}"
-      ;;
-    *)
-      warn "No package manager found. Install these yourself: ${wanted[*]}"
-      ;;
-  esac
+  say "installing the $layer packages"
+  run bash "$root/scripts/$script.sh"
 }
 
 ttyp0_italic() {
@@ -469,8 +415,7 @@ uninstall() {
   else
     say "Kept $fonts and $cache. --purge removes them too."
   fi
-  say "No packages were removed. Athanor may have installed some of these:"
-  say "  ${shell_packages[*]} ${desktop_packages[*]} ${notch_packages[*]}"
+  say "No packages were removed. The ones Athanor installs are in scripts/*.sh."
   say "Only ash remains."
 }
 

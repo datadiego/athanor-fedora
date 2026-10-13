@@ -5,7 +5,7 @@ longitude = -74.05
 [character]
 name = "Prospero"
 title = "the Magus"
-race = "Arch Linux"
+race = "Fedora Linux"
 
 [room]
 name = "The Tower"

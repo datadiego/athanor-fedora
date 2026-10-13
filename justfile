@@ -13,7 +13,7 @@ fmt:
     uv run ruff format src tests
     uv run ruff check --fix src tests
 
-# install on this machine (Arch or Fedora)
+# install on this machine (Fedora)
 install:
     ./install.sh
 

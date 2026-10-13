@@ -112,7 +112,7 @@ banner() { # scheme
     -pointsize 43 label:athanor -trim +repage -filter point -resize 400% "$demo/word.png"
   for line in 1 2; do
     magick -background none -fill "$dim" +antialias -font "$font_dir/Px437_Tandy2K.ttf" -pointsize 16 \
-      "label:$([[ $line == 1 ]] && echo 'an alchemical layer' || echo 'for arch and hyprland')" \
+      "label:$([[ $line == 1 ]] && echo 'an alchemical layer' || echo 'for fedora and hyprland')" \
       -trim +repage -filter point -resize 200% "$demo/line$line.png"
   done
   magick "${plates[3]}" -crop "320x400+$((W * 760 / 1366))+$((H * 208 / 768))" +repage \

@@ -10,8 +10,8 @@ sudo dnf install -y \
   waybar mako fuzzel foot swaybg \
   libnotify grim slurp wl-clipboard brightnessctl playerctl
 
-# En Arch esto es el paquete ttf-nerd-fonts-symbols-mono. Fedora no lo trae,
-# así que se baja el set de símbolos de Nerd Fonts al directorio de usuario.
+# Fedora no trae los símbolos de Nerd Fonts como paquete, así que se baja el
+# set al directorio de usuario.
 fonts="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
 if ! fc-list 2>/dev/null | grep -qi "Symbols Nerd Font"; then
   mkdir -p "$fonts"
