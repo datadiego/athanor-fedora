@@ -83,12 +83,32 @@ Super+Shift+E asks before quitting Hyprland. Run `athanor guide` for the rest.
 
 ## Install
 
+On Fedora:
+
 ```sh
-git clone https://github.com/script-wizards/athanor
-cd athanor
-./install.sh --dry-run
-./install.sh
+git clone https://github.com/datadiego/athanor-fedora
+cd athanor-fedora
+make install
 ```
+
+`make install` installs the system packages (Hyprland comes from the
+`sdegler/hyprland` COPR), fetches the fonts, installs the `athanor` command
+with `uv` and links the dotfiles into `~/.config` with `stow` from the
+`athanor/` tree. On Arch the same entry point still uses `pacman`.
+
+| target | what it does |
+|---|---|
+| `make help` | list the targets |
+| `make shell` (`make common`) | the shell layer only |
+| `make desktop` | the desktop layer (implies shell) |
+| `make notch` | desktop + the Hyprland notch plugin |
+| `make packages` | only the system packages (dnf + COPR) |
+| `make stow` / `make unstow` | link / remove the dotfiles |
+| `make render` | redraw the palettes and wallpapers |
+| `make uninstall` / `make purge` | remove Athanor |
+
+`./install.sh` still works underneath: `./install.sh --dry-run` prints what it
+would do and `./install.sh shell` installs just the shell layer.
 
 Athanor keeps its files in `~/.config/athanor`. Outside that folder it only
 adds a marked block to the top of your `.zshrc` and your `hyprland.lua`. Your
