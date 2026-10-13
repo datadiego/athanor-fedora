@@ -5,6 +5,8 @@ esotericism and dungeon crawling.
 
 ![Umber](docs/screenshots/desktop-umber.png)
 
+This is just a fork [from the original project](https://github.com/script-wizards/athanor), this is just an adaptation for using it on Fedora.
+
 ## The Signs
 
 The bar shows the planetary hour. Athanor calculates it from your own sunrise
