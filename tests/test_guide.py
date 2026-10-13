@@ -3,7 +3,7 @@ from pathlib import Path
 
 from athanor import cli, guide
 
-BINDS = (Path(__file__).parent.parent / "config/hypr/binds.lua").read_text()
+BINDS = (Path(__file__).parent.parent / "athanor/.config/athanor/hypr/binds.lua").read_text()
 
 
 def test_every_key_in_the_guide_is_bound():

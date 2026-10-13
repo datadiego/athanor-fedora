@@ -9,14 +9,15 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 INSTALL = ROOT / "install.sh"
 EVERYTHING = (
-    "zsh uv imagemagick curl unzip fontconfig hyprland hyprlock hypridle waybar mako fuzzel"
-    " perl foot swaybg libnotify grim slurp wl-clipboard"
+    "zsh uv imagemagick curl unzip fontconfig perl stow hyprland hyprlock hypridle waybar mako"
+    " fuzzel foot swaybg libnotify grim slurp wl-clipboard"
 )
 
 STUBS = {
     "sudo": 'echo "sudo $*" >> "$LOG"',
     "pacman": """[[ $1 == -Q ]] && { [[ " $INSTALLED " == *" $2 "* ]]; exit; }
 echo "pacman $*" >> "$LOG\"""",
+    "dnf": 'echo "dnf $*" >> "$LOG"',
     "systemctl": 'echo "systemctl $*" >> "$LOG"',
     "fc-cache": "true",
     "tar": "true",
@@ -60,7 +61,13 @@ class Home:
         self.log = path / "log"
         path.mkdir()
 
-    def run(self, *args: str, managed: str = "", installed: str = EVERYTHING) -> str:
+    def run(
+        self,
+        *args: str,
+        managed: str = "",
+        installed: str = EVERYTHING,
+        distro: str = "arch",
+    ) -> str:
         env = {
             "HOME": str(self.path),
             "PATH": f"{self.stubs}:/usr/bin:/bin",
@@ -68,6 +75,7 @@ class Home:
             "SHELL": "/usr/bin/zsh",
             "INSTALLED": installed,
             "MANAGED": managed,
+            "ATHANOR_DISTRO": distro,
         }
         done = subprocess.run(
             ["bash", str(INSTALL), *args], env=env, capture_output=True, text=True, timeout=60
@@ -110,7 +118,7 @@ def test_shell_layer_in_a_fresh_home(home):
         ".config/fontconfig/conf.d/60-athanor.conf",
     ):
         link = home / rel
-        assert link.is_symlink() and Path(os.readlink(link)).is_relative_to(ROOT), rel
+        assert link.is_symlink() and link.resolve().is_relative_to(ROOT), rel
     assert (home / ".config/athanor/athanor.toml").is_file()
     assert (home / ".local/share/fonts/athanor/Px437_Tandy2K.ttf").exists()
     assert (home / ".local/share/fonts/athanor/t0-16i-uni.bdf").exists()
@@ -119,7 +127,7 @@ def test_shell_layer_in_a_fresh_home(home):
 
 
 def test_only_missing_packages_are_installed_and_nothing_is_upgraded(home):
-    home.run("shell", installed="zsh uv curl unzip fontconfig perl")
+    home.run("shell", installed="zsh uv curl unzip fontconfig perl stow")
     log = home.log.read_text()
     assert "sudo pacman -S --needed imagemagick\n" in log
     assert "-Syu" not in log and "-Sy " not in log
@@ -209,13 +217,12 @@ def test_files_that_arent_athanors_are_never_replaced(home):
     assert "isn't Athanor's. Leaving it alone." in out
 
 
-def test_uninstall_leaves_nothing_but_settings_and_purge_takes_those(home):
+def test_uninstall_leaves_nothing_but_fonts_and_purge_takes_those(home):
     home.run()
     home.write(".local/share/icons/athanor/cursors/default", "drawn by transmute")
     home.run("--uninstall")
     fonts = home / ".local/share/fonts/athanor"
-    kept = {".config/athanor/athanor.toml"}
-    kept |= {f".local/share/fonts/athanor/{name}" for name in os.listdir(fonts)}
+    kept = {f".local/share/fonts/athanor/{name}" for name in os.listdir(fonts)}
     assert home.files() == kept
     home.run("--uninstall", "--purge")
     assert home.files() == set()
@@ -223,7 +230,9 @@ def test_uninstall_leaves_nothing_but_settings_and_purge_takes_those(home):
 
 def test_uninstall_cleans_up_after_the_first_installer(home):
     (home / ".config/hypr").mkdir(parents=True)
-    (home / ".config/hypr/hyprland.conf").symlink_to(ROOT / "config/hypr/athanor.conf")
+    (home / ".config/hypr/hyprland.conf").symlink_to(
+        ROOT / "athanor/.config/athanor/hypr/athanor.conf"
+    )
     home.write(".config/hypr/hyprland.conf.athanor-bak.20261004-120000", "mine\n")
     (home / ".config/mako").mkdir()
     (home / ".config/mako/config").symlink_to("/elsewhere")
@@ -272,3 +281,20 @@ def test_vga_and_compaq_get_an_overstrike_bold_once(home):
         (home / f".local/share/fonts/athanor/{name}").touch()
     home.run("shell")
     assert home.log.read_text().count("tools/overstrike.py") == 2
+
+
+def test_fedora_shell_uses_dnf_and_stow(home):
+    home.run("shell", distro="fedora", installed="")
+    log = home.log.read_text()
+    assert "sudo dnf install -y zsh ImageMagick curl unzip fontconfig perl stow" in log
+    assert "pacman" not in log
+    assert (home / ".config/athanor/athanor.zsh").is_symlink()
+    assert not (home / ".config/hypr").exists()
+
+
+def test_fedora_desktop_enables_the_hyprland_copr(home):
+    home.run("desktop", distro="fedora", installed="")
+    log = home.log.read_text()
+    assert "sudo dnf copr enable sdegler/hyprland -y" in log
+    assert (home / ".config/athanor/hypr/athanor.lua").is_symlink()
+    assert (home / ".config/hypr/hyprland.lua").exists()

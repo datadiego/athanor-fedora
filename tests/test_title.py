@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-ZSHRC = Path(__file__).resolve().parent.parent / "config/zsh/athanor.zsh"
+ZSHRC = Path(__file__).resolve().parent.parent / "athanor/.config/athanor/athanor.zsh"
 
 pytestmark = pytest.mark.skipif(not shutil.which("zsh"), reason="needs zsh")
 

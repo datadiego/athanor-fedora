@@ -12,7 +12,8 @@ STYLES = {"bold", "italic", "underline", "reverse"}
 
 
 def test_micro_uses_only_terminal_slots():
-    for line in (ROOT / "config/micro/colorschemes/athanor.micro").read_text().splitlines():
+    micro = ROOT / "athanor/.config/micro/colorschemes/athanor.micro"
+    for line in micro.read_text().splitlines():
         if not line.startswith("color-link"):
             continue
         _, group, value = line.split(maxsplit=2)
@@ -20,7 +21,7 @@ def test_micro_uses_only_terminal_slots():
             assert word in SLOTS | STYLES or word == "comment", (group, word)
 
 
-NVIM = ROOT / "config/nvim"
+NVIM = ROOT / "athanor/.config/nvim"
 NVIM_SLOTS = {"black", "red", "green", "yellow", "blue", "magenta", "cyan", "white", "gray"}
 NVIM_SLOTS |= {f"bright_{c}" for c in ("red", "green", "yellow")}
 
