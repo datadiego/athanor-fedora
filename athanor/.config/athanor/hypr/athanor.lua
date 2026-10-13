@@ -32,7 +32,9 @@ hl.config({
         disable_splash_rendering = true,
     },
     input = {
-        kb_layout = "us",
+        -- Keyboard layout: Spanish by default. Swap in "en" for English.
+        kb_layout = "es",
+        -- kb_layout = "en",
         follow_mouse = 1,
     },
 })
