@@ -99,7 +99,7 @@ launch athanor-shot-term \
   "env XDG_CONFIG_HOME=$demo ATHANOR_DEMO_REPO=$almagest foot --config $foot_ini --app-id athanor-shot-term zsh $here/terminal.zsh" \
   "$gap" "$gap" "$left_w" "$term_h"
 launch athanor-shot-edit \
-  "foot --config $foot_ini --app-id athanor-shot-edit --working-directory=$almagest nvim --clean --cmd \"set rtp^=$repo/config/nvim\" -S $here/nvim.lua +13 planetary.c" \
+  "foot --config $foot_ini --app-id athanor-shot-edit --working-directory=$almagest nvim --clean --cmd \"set rtp^=$repo/athanor/.config/nvim\" -S $here/nvim.lua +13 planetary.c" \
   "$right_x" "$edit_y" "$right_w" "$edit_h"
 sleep 2
 

@@ -40,12 +40,31 @@ markers() {
   end="$c <<< athanor <<<"
 }
 
-shell_packages=(zsh uv imagemagick curl unzip fontconfig perl)
+shell_packages=(zsh uv imagemagick curl unzip fontconfig perl stow)
 desktop_packages=(
   hyprland hyprlock hypridle waybar mako fuzzel foot ttf-nerd-fonts-symbols-mono hyprpaper swaybg
   libnotify grim slurp wl-clipboard brightnessctl playerctl
 )
 notch_packages=(gcc make pkgconf)
+
+# Fedora no trae Hyprland en sus repos: lo cubre scripts/desktop.sh (COPR de
+# sdegler). En Arch se instala con pacman como siempre.
+distro() {
+  if [[ -n ${ATHANOR_DISTRO:-} ]]; then
+    printf '%s' "$ATHANOR_DISTRO"
+    return
+  fi
+  if [[ -r /etc/os-release ]]; then
+    local id
+    # shellcheck source=/dev/null
+    id=$(. /etc/os-release 2>/dev/null; printf '%s' "${ID:-}")
+    case $id in
+      fedora | rhel | centos | rocky | almalinux) printf 'fedora'; return ;;
+    esac
+  fi
+  command -v pacman >/dev/null && { printf 'arch'; return; }
+  printf 'unknown'
+}
 
 dry=0 mode=install purge=0 fresh_fonts=0
 layers=()
@@ -90,21 +109,6 @@ run() {
 }
 
 ours() { [[ -L $1 && $(readlink "$1") == "$root"/* ]]; }
-
-link() {
-  local src=$1 dest=$2
-  if ours "$dest"; then
-    [[ $(readlink "$dest") == "$src" ]] && return 0
-    run ln -sfn "$src" "$dest"
-    return 0
-  fi
-  if [[ -e $dest || -L $dest ]]; then
-    warn "$dest already exists and isn't Athanor's. Leaving it alone."
-    return 0
-  fi
-  run mkdir -p "$(dirname "$dest")"
-  run ln -s "$src" "$dest"
-}
 
 unlink_ours() {
   if ours "$1"; then
@@ -211,24 +215,17 @@ lua_dir='local xdg = os.getenv("XDG_CONFIG_HOME")'$'\n''local athanor = ((xdg an
 lua_body="$lua_dir"$'\n''require(athanor .. "athanor")'
 lua_binds='require(athanor .. "binds")'
 
-shell_links=(
-  "config/zsh/athanor.zsh:$home/athanor.zsh"
-  "config/helix/themes/athanor.toml:$config/helix/themes/athanor.toml"
-  "config/micro/colorschemes/athanor.micro:$config/micro/colorschemes/athanor.micro"
-  "config/nvim/colors/athanor.lua:$config/nvim/colors/athanor.lua"
-  "config/nvim/lua/lualine/themes/athanor.lua:$config/nvim/lua/lualine/themes/athanor.lua"
-  "config/fontconfig/60-athanor.conf:$config/fontconfig/conf.d/60-athanor.conf"
-)
-desktop_links=(
-  "config/hypr/athanor.lua:$home/hypr/athanor.lua"
-  "config/hypr/binds.lua:$home/hypr/binds.lua"
-  "config/hypr/athanor.conf:$home/hypr/athanor.conf"
-  "config/hypr/binds.conf:$home/hypr/binds.conf"
-  "config/hypr/hypridle.conf:$home/hypr/hypridle.conf"
-  "config/waybar/config.jsonc:$home/waybar/config.jsonc"
-  "config/systemd/user/athanor-tomb.path:$units/athanor-tomb.path"
-  "config/systemd/user/athanor-tomb.service:$units/athanor-tomb.service"
-)
+# Athanor's dotfiles live in the stow package athanor/ (an athanor/.config tree).
+stow_layer() {
+  local layer=${1:-}
+  say "linking Athanor's dotfiles with stow"
+  if [[ -n $layer ]]; then
+    run bash "$root/scripts/stow.sh" "$layer"
+  else
+    run bash "$root/scripts/stow.sh"
+  fi
+}
+
 # Links the first version of the installer made over existing configs.
 legacy_links=(
   "$config/hypr/hyprland.conf" "$config/hypr/hypridle.conf" "$config/hypr/hyprlock.conf"
@@ -237,18 +234,43 @@ legacy_links=(
 )
 
 install_packages() {
-  local wanted=("$@") missing=() p
-  if ! command -v pacman >/dev/null; then
-    warn "No pacman here. Install these yourself: ${wanted[*]}"
-    return 0
-  fi
-  for p in "${wanted[@]}"; do
-    pacman -Q "$p" >/dev/null 2>&1 || missing+=("$p")
-  done
-  ((${#missing[@]})) || return 0
-  # No -y so this never does a partial upgrade.
-  say "installing ${missing[*]}"
-  run sudo pacman -S --needed "${missing[@]}"
+  local layer=$1 wanted=() missing=() p script
+  case $layer in
+    shell)
+      wanted=("${shell_packages[@]}")
+      script=common
+      ;;
+    desktop)
+      wanted=("${desktop_packages[@]}")
+      script=desktop
+      ;;
+    notch)
+      wanted=("${notch_packages[@]}")
+      script=notch
+      ;;
+  esac
+  case $(distro) in
+    fedora)
+      say "installing the $layer packages"
+      run bash "$root/scripts/$script.sh"
+      ;;
+    arch)
+      command -v pacman >/dev/null || {
+        warn "No pacman here. Install these yourself: ${wanted[*]}"
+        return 0
+      }
+      for p in "${wanted[@]}"; do
+        pacman -Q "$p" >/dev/null 2>&1 || missing+=("$p")
+      done
+      ((${#missing[@]})) || return 0
+      # No -y so this never does a partial upgrade.
+      say "installing ${missing[*]}"
+      run sudo pacman -S --needed "${missing[@]}"
+      ;;
+    *)
+      warn "No package manager found. Install these yourself: ${wanted[*]}"
+      ;;
+  esac
 }
 
 ttyp0_italic() {
@@ -308,26 +330,15 @@ install_fonts() {
   run fc-cache -f "$fonts"
 }
 
-link_all() {
-  local pair
-  for pair in "$@"; do
-    link "$root/${pair%%:*}" "${pair#*:}"
-  done
-}
-
 install_shell() {
   say "installing the shell layer"
-  install_packages "${shell_packages[@]}"
+  install_packages shell
   install_fonts
 
   say "installing the athanor command"
   run uv tool install --force --editable "$root"
 
-  link_all "${shell_links[@]}"
-  if [[ ! -f $home/athanor.toml ]]; then
-    run mkdir -p "$home"
-    run cp "$root/config/athanor/athanor.toml" "$home/athanor.toml"
-  fi
+  stow_layer shell
 
   add_block "$(zshrc)" "$zsh_body"
   if ! grep -qs '^theme *= *"athanor"' "$config/helix/config.toml"; then
@@ -351,8 +362,8 @@ install_shell() {
 
 install_desktop() {
   say "installing the desktop layer"
-  install_packages "${desktop_packages[@]}"
-  link_all "${desktop_links[@]}"
+  install_packages desktop
+  stow_layer
 
   if [[ -f $hyprconf && ! -f $hyprlua ]] && only_block "$hyprconf"; then
     # Don't delete hyprland.conf. If the running session can't find it, Hyprland
@@ -392,7 +403,7 @@ install_desktop() {
 
 install_notch() {
   say "building the notch against the installed Hyprland"
-  install_packages "${notch_packages[@]}"
+  install_packages notch
   run mkdir -p "$data"
   # A running Hyprland has the old build mapped, so the new one is moved into place.
   run make -s -C "$root/plugin" OUT="$notch.new"
@@ -415,10 +426,9 @@ uninstall() {
   if [[ -L $units/athanor-tomb.path ]]; then
     run systemctl --user disable --now athanor-tomb.path || true
   fi
-  local pair path bak
-  for pair in "${shell_links[@]}" "${desktop_links[@]}"; do
-    unlink_ours "${pair#*:}"
-  done
+  local path bak
+  say "removing Athanor's dotfiles"
+  run bash "$root/scripts/stow.sh" -D || warn "stow could not remove every link."
   command -v fc-cache >/dev/null && run fc-cache -f
   if [[ -d $units ]] && command -v systemctl >/dev/null; then
     run systemctl --user daemon-reload || true
@@ -457,7 +467,7 @@ uninstall() {
     run rm -rf "$home" "$fonts" "$cache" "$state" "$data"
     run fc-cache -f
   else
-    say "Kept $home/athanor.toml, $fonts and $cache. --purge removes them too."
+    say "Kept $fonts and $cache. --purge removes them too."
   fi
   say "No packages were removed. Athanor may have installed some of these:"
   say "  ${shell_packages[*]} ${desktop_packages[*]} ${notch_packages[*]}"

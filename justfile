@@ -13,7 +13,7 @@ fmt:
     uv run ruff format src tests
     uv run ruff check --fix src tests
 
-# install on this machine (Arch only)
+# install on this machine (Arch or Fedora)
 install:
     ./install.sh
 
@@ -34,7 +34,8 @@ verify:
     XDG_CONFIG_HOME=$tmp/config XDG_CACHE_HOME=$tmp/cache XDG_STATE_HOME=$tmp/state \
         uv run athanor transmute umber --no-reload --size 1366x768 >/dev/null
     mkdir -p "$tmp/config/athanor/hypr"
-    ln -s "$PWD/config/hypr/athanor.lua" "$PWD/config/hypr/binds.lua" "$tmp/config/athanor/hypr/"
+    ln -s "$PWD/athanor/.config/athanor/hypr/athanor.lua" \
+        "$PWD/athanor/.config/athanor/hypr/binds.lua" "$tmp/config/athanor/hypr/"
     printf 'require("%s/config/athanor/hypr/athanor")\nrequire("%s/config/athanor/hypr/binds")\n' "$tmp" "$tmp" >"$tmp/hyprland.lua"
     XDG_CONFIG_HOME=$tmp/config Hyprland --verify-config -c "$tmp/hyprland.lua" 2>&1 | grep -v DEBUG | tail -n +2
     foot --check-config --config "$tmp/config/athanor/current/foot/foot.ini" && echo "foot ok"
