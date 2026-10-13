@@ -1,6 +1,7 @@
 import getpass
 import os
 import platform
+import subprocess
 import textwrap
 from pathlib import Path
 
@@ -46,9 +47,17 @@ def _os_release() -> dict[str, str]:
 
 def _packages() -> str:
     local = Path("/var/lib/pacman/local")
-    if not local.is_dir():
-        return "?"
-    return f"{sum(1 for p in local.iterdir() if p.is_dir())} items"
+    if local.is_dir():
+        return f"{sum(1 for p in local.iterdir() if p.is_dir())} items"
+    if Path("/usr/lib/sysimage/rpm").is_dir() or Path("/var/lib/rpm").is_dir():
+        try:
+            out = subprocess.run(
+                ["rpm", "-qa"], capture_output=True, text=True, check=True, timeout=15
+            )
+            return f"{len(out.stdout.splitlines())} items"
+        except (OSError, subprocess.SubprocessError):
+            return "?"
+    return "?"
 
 
 def sheet(cfg, color: bool) -> str:

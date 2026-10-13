@@ -110,7 +110,7 @@ def cmd_transmute(args) -> None:
     scheme, walls = transmute.apply(name, reload=not args.no_reload, size=size)
     print(f"You read a scroll of transmutation. {transmute.HUES[scheme.name]}")
     if walls is None:
-        print("No plates were drawn because ImageMagick is missing. pacman -S imagemagick")
+        print("No plates were drawn because ImageMagick is missing. Install ImageMagick.")
 
 
 def cmd_doctor(args) -> None:
@@ -362,7 +362,7 @@ def cmd_palette(args) -> None:
 
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="athanor", description="An alchemical layer for Arch and Hyprland."
+        prog="athanor", description="An alchemical layer for Arch/Fedora and Hyprland."
     )
     sub = p.add_subparsers(dest="command", required=True)
 

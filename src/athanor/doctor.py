@@ -217,7 +217,7 @@ def check_hypr_session() -> list[Result]:
                 "hyprland",
                 WARN,
                 f"Hyprland {'.'.join(map(str, version))}. Athanor wants {want}.",
-                "pacman -Syu",
+                "Update your system (dnf upgrade / pacman -Syu).",
             )
         )
     errors = (hypr.request("configerrors") or "").strip()
