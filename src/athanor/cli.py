@@ -110,7 +110,9 @@ def cmd_transmute(args) -> None:
     scheme, walls = transmute.apply(name, reload=not args.no_reload, size=size)
     print(f"You read a scroll of transmutation. {transmute.HUES[scheme.name]}")
     if walls is None:
-        print("No plates were drawn because ImageMagick is missing. Install ImageMagick.")
+        print(
+            "No plates were drawn because ImageMagick is missing. Run: sudo dnf install ImageMagick"
+        )
 
 
 def cmd_doctor(args) -> None:
@@ -345,9 +347,11 @@ def cmd_sheet(_args) -> None:
 
 
 def cmd_font(_args) -> None:
-    face = config.TERMINAL_FONTS[config.load().terminal_font]
+    cfg = config.load()
+    face = config.TERMINAL_FONTS[cfg.terminal_font]
+    px, _ = config.terminal_px(cfg.terminal_font, cfg.terminal_size)
     bold = f", with {face.bold} for bold" if face.bold else ""
-    print(f"{face.family} at {face.px}px ({face.px * 72 / 96:g}pt at 96 dpi){bold}")
+    print(f"{face.family} at {px}px ({px * 72 / 96:g}pt at 96 dpi){bold}")
 
 
 def cmd_palette(args) -> None:
@@ -362,7 +366,7 @@ def cmd_palette(args) -> None:
 
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        prog="athanor", description="An alchemical layer for Arch/Fedora and Hyprland."
+        prog="athanor", description="An alchemical layer for Fedora and Hyprland."
     )
     sub = p.add_subparsers(dest="command", required=True)
 

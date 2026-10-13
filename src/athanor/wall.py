@@ -42,7 +42,7 @@ def _font() -> list[str]:
 def _magick() -> str:
     exe = shutil.which("magick")
     if exe is None:
-        raise MissingTool("the plates need ImageMagick 7. Install the ImageMagick package.")
+        raise MissingTool("the plates need ImageMagick 7. Run: sudo dnf install ImageMagick")
     return exe
 
 

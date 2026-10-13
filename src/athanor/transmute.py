@@ -186,10 +186,12 @@ def tokens(
     sigil_png: Path,
     fingerprint: str,
     font: str = config.Config.terminal_font,
+    terminal_size: int = 0,
     name: str = "",
 ) -> dict[str, str]:
     w, h = size
     face = config.TERMINAL_FONTS[font]
+    px, icon_px = config.terminal_px(font, terminal_size)
     layout = lock_layout(size, walls.lock_panel_x if walls else 0, walls.scale if walls else 2)
     return {
         **scheme.colors(),
@@ -212,14 +214,15 @@ def tokens(
         "bin": str(Path.home() / ".local/bin/athanor"),
         "card_png": str(cache_dir() / "tarot-day.png"),
         "term_font": face.family,
-        "term_px": str(face.px),
-        "term_icon_px": str(round(face.px * 3 / 4)),
-        "term_font_bold": f"{face.bold}:pixelsize={face.px}"
+        "term_px": str(px),
+        "term_icon_px": str(icon_px),
+        "term_font_bold": f"{face.bold}:pixelsize={px}"
         if face.bold
-        else f"{face.family}:pixelsize={face.px}:weight=bold",
-        "term_font_italic": f"{face.italic}:style=Italic:pixelsize={face.px}"
+        else f"{face.family}:pixelsize={px}:weight=bold",
+        "term_font_italic": f"{face.italic}:style=Italic:pixelsize={px}"
         if face.italic
-        else f"{face.family}:pixelsize={face.px}",
+        else f"{face.family}:pixelsize={px}",
+        "font_size_adjustment": "100%" if font in config.PIXEL_FONTS else "0.5",
     }
 
 
@@ -248,7 +251,16 @@ def apply(
         layout = {**lock_layout(size, walls.lock_panel_x, walls.scale), "scale": walls.scale}
         write_atomic(_layout_state(), json.dumps(layout))
         card_of_day_png(scheme, layout)
-    toks = tokens(scheme, size, walls, sigil_png, fingerprint, cfg.terminal_font, cfg.name)
+    toks = tokens(
+        scheme,
+        size,
+        walls,
+        sigil_png,
+        fingerprint,
+        font=cfg.terminal_font,
+        terminal_size=cfg.terminal_size,
+        name=cfg.name,
+    )
     render_tree(current_dir(), toks)
     write_atomic(state_dir() / "scheme", scheme.name + "\n")
     cursor.render(scheme)

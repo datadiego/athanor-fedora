@@ -24,6 +24,20 @@ TERMINAL_FONTS = {
     "vga": TerminalFont("PxPlus IBM VGA 8x16", 16, bold="PxPlus IBM VGA Overstrike"),
 }
 
+# Traced bitmap faces that only stay crisp on multiples of their native grid.
+PIXEL_FONTS = {"tandy", "compaq", "vga"}
+
+
+def terminal_px(font: str, size: int = 0) -> tuple[int, int]:
+    face = TERMINAL_FONTS[font]
+    if size <= 0:
+        px = face.px
+    elif font in PIXEL_FONTS:
+        px = face.px * max(1, round(size / face.px))
+    else:
+        px = size
+    return px, max(1, round(px * 3 / 4))
+
 
 @dataclass(frozen=True)
 class Config:
@@ -37,6 +51,7 @@ class Config:
     pixel_scale: int = 0
     levels: bool = True
     terminal_font: str = "tandy"
+    terminal_size: int = 0
     tarot_on_login: bool = True
     stages: bool = False
 
@@ -66,6 +81,7 @@ def load() -> Config:
         pixel_scale=int(display.get("pixel_scale", 0)),
         levels=bool(display.get("levels", True)),
         terminal_font=font,
+        terminal_size=int(display.get("terminal_size", 0)),
         tarot_on_login=bool(raw.get("tarot", {}).get("on_login", True)),
         stages=bool(raw.get("transmute", {}).get("stages", False)),
     )

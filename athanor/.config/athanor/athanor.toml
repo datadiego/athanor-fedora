@@ -7,7 +7,7 @@
 # name defaults to your login name and race to your distro.
 # name = "Prospero"
 title = "the Wizard"
-# race = "Arch Linux"
+# race = "Fedora Linux"
 
 [room]
 name = "A Dim Chamber"
@@ -25,6 +25,11 @@ pixel_scale = 0
 levels = true
 # tandy, terminus, cozette, compaq or vga. Applies at the next transmute.
 terminal_font = "tandy"
+# Terminal font size in px. 0 uses the face's native size. The pixel faces
+# (tandy, compaq, vga) snap to the nearest multiple of their grid; terminus
+# and cozette scale freely. Ctrl+plus zooms in crisp steps. Applies at the
+# next transmute.
+terminal_size = 0
 
 [transmute]
 # Change scheme with the time of day: umber at night, then vellum, orpiment
