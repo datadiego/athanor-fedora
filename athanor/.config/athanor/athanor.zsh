@@ -36,3 +36,6 @@ fi
 if [[ -o interactive && -x ~/.local/bin/athanor ]]; then
   ~/.local/bin/athanor room --once
 fi
+
+# Personal shell from `make tools` / `make dev` (opt-in).
+[[ -r ~/.config/athanor/tools.zsh ]] && source ~/.config/athanor/tools.zsh

@@ -2,6 +2,7 @@
 # Enlaza los dotfiles de Athanor en $HOME con GNU Stow.
 #   ./scripts/stow.sh            # todos los ficheros
 #   ./scripts/stow.sh shell      # capa shell (sin Hyprland, Waybar ni systemd)
+#   ./scripts/stow.sh tools      # la config de shell personal (athanor-tools)
 #   ./scripts/stow.sh -D         # desenlaza
 #
 # Los ficheros que ya existen y no son de Athanor se dejan en paz: en vez de
@@ -24,6 +25,7 @@ for arg in "$@"; do
   case $arg in
     -D | --delete) action=-D ;;
     shell | desktop) layer=$arg ;;
+    tools) pkg=athanor-tools ;;
     *)
       echo "unknown argument: $arg" >&2
       exit 2

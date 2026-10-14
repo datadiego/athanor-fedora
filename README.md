@@ -100,11 +100,14 @@ with `uv` and links the dotfiles into `~/.config` with `stow` from the
 | target | what it does |
 |---|---|
 | `make help` | list the targets |
-| `make shell` (`make common`) | the shell layer only |
+| `make shell` | the shell layer only |
 | `make desktop` | the desktop layer (implies shell) |
 | `make notch` | desktop + the Hyprland notch plugin |
 | `make packages` | only the system packages (dnf + COPR) |
+| `make tools` | install the CLI utilities and enable the personal shell config |
+| `make dev` | install the development tools and enable the personal shell config |
 | `make stow` / `make unstow` | link / remove the dotfiles |
+| `make untools` | remove only the personal shell config |
 | `make render` | redraw the palettes and wallpapers |
 | `make uninstall` / `make purge` | remove Athanor |
 
@@ -114,6 +117,11 @@ would do and `./install.sh shell` installs just the shell layer.
 Athanor keeps its files in `~/.config/athanor`. Outside that folder it only
 adds a marked block to the top of your `.zshrc` and your `hyprland.lua`. Your
 own settings load after the block and override it.
+
+`make tools` and `make dev` also link an optional `~/.config/athanor/tools.zsh`
+with a personal shell setup (environment, `PATH` and the `fzf`, `zoxide` and
+`navi` integrations). The prompt sources it only if it exists, so without those
+targets the shell stays exactly as Athanor ships it. `make untools` removes it.
 
 The prompt names each terminal window after its folder, or after the command
 running in it. Set `ATHANOR_TITLE=0` in your `.zshrc` to keep your own titles.

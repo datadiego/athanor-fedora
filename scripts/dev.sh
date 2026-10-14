@@ -1,3 +1,15 @@
+#!/usr/bin/env bash
+# Herramientas de desarrollo de Athanor en Fedora.
+#   ./scripts/dev.sh        # instala y activa la config de shell personal
+#   ./scripts/dev.sh -D     # desenlaza la config de shell personal
+set -uo pipefail
+
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+if [[ ${1:-} == -D || ${1:-} == --unstow ]]; then
+  bash "$root/scripts/stow.sh" tools -D
+  exit 0
+fi
+
 # pgcli
 sudo dnf install -y pgcli
 
@@ -63,7 +75,10 @@ sudo dnf config-manager addrepo --from-repofile https://download.docker.com/linu
 sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 sudo systemctl enable --now docker
 sudo groupadd -f docker
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
 
 # opencode
 curl -fsSL https://opencode.ai/v2/install | bash
+
+# La config de shell personal: entorno, PATH y las integraciones de fzf, zoxide y navi.
+bash "$root/scripts/stow.sh" tools

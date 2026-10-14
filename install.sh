@@ -375,6 +375,7 @@ uninstall() {
   local path bak
   say "removing Athanor's dotfiles"
   run bash "$root/scripts/stow.sh" -D || warn "stow could not remove every link."
+  run bash "$root/scripts/stow.sh" tools -D || warn "stow could not remove the personal shell config."
   command -v fc-cache >/dev/null && run fc-cache -f
   if [[ -d $units ]] && command -v systemctl >/dev/null; then
     run systemctl --user daemon-reload || true

@@ -1,3 +1,15 @@
+#!/usr/bin/env bash
+# Utilidades y herramientas CLI de Athanor en Fedora.
+#   ./scripts/tools.sh        # instala y activa la config de shell personal
+#   ./scripts/tools.sh -D     # desenlaza la config de shell personal
+set -uo pipefail
+
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+if [[ ${1:-} == -D || ${1:-} == --unstow ]]; then
+  bash "$root/scripts/stow.sh" tools -D
+  exit 0
+fi
+
 # update
 sudo dnf update -y
 
@@ -53,8 +65,8 @@ sudo mv /tmp/lsoff /usr/local/bin/lsoff
 
 # Codecs (RPM Fusion + ffmpeg completo para mkv, h264, hevc, etc)
 sudo dnf install \
-  https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
-  https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+  "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
+  "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" -y
 sudo dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
 # try
@@ -72,4 +84,7 @@ cargo install --locked --git https://github.com/asciinema/agg
 # cargo install vm-curator -y
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# La config de shell personal: entorno, PATH y las integraciones de fzf, zoxide y navi.
+bash "$root/scripts/stow.sh" tools
 

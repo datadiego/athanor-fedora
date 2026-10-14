@@ -3,7 +3,7 @@ SHELL := /bin/bash
 # Paquete de stow (el árbol de dotfiles athanor/)
 PACKAGES := athanor
 
-.PHONY: help check-sudo install shell desktop notch packages tools dev stow unstow render uninstall purge test lint fmt clean
+.PHONY: help check-sudo install shell desktop notch packages tools dev stow unstow untools render uninstall purge test lint fmt clean
 
 help: ## Mostrar esta ayuda
 	@cat logo
@@ -28,17 +28,21 @@ packages: check-sudo ## Instalar solo los paquetes del sistema (dnf + COPR)
 	@bash scripts/common.sh
 	@bash scripts/desktop.sh
 
-tools: check-sudo ## Instalar utilidades y herramientas CLI
+tools: check-sudo ## Instalar utilidades CLI y activar la config de shell personal
 	@bash scripts/tools.sh
 
-dev: check-sudo ## Instalar herramientas de desarrollo
+dev: check-sudo ## Instalar herramientas de desarrollo y activar la config de shell personal
 	@bash scripts/dev.sh
 
 stow: ## Enlazar los dotfiles en $(HOME) con stow
 	@bash scripts/stow.sh
 
-unstow: ## Quitar los enlaces de stow
+unstow: ## Quitar los enlaces de stow (base y config personal)
 	@bash scripts/stow.sh -D
+	@bash scripts/stow.sh tools -D
+
+untools: ## Quitar solo la config de shell personal
+	@bash scripts/stow.sh tools -D
 
 render: ## Redibujar paletas y wallpapers
 	@uv run athanor transmute
