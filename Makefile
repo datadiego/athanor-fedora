@@ -3,7 +3,7 @@ SHELL := /bin/bash
 # Paquete de stow (el árbol de dotfiles athanor/)
 PACKAGES := athanor
 
-.PHONY: help check-sudo install shell common desktop notch packages stow unstow render uninstall purge test lint fmt clean
+.PHONY: help check-sudo install shell desktop notch packages tools dev stow unstow render uninstall purge test lint fmt clean
 
 help: ## Mostrar esta ayuda
 	@cat logo
@@ -18,8 +18,6 @@ install: check-sudo ## Instalar Athanor completo (paquetes + app + stow)
 shell: check-sudo ## Instalar solo la capa shell
 	@./install.sh shell
 
-common: shell ## Alias de shell
-
 desktop: check-sudo ## Instalar la capa escritorio (incluye shell)
 	@./install.sh desktop
 
@@ -29,6 +27,12 @@ notch: check-sudo ## Escritorio + compilar el plugin notch
 packages: check-sudo ## Instalar solo los paquetes del sistema (dnf + COPR)
 	@bash scripts/common.sh
 	@bash scripts/desktop.sh
+
+tools: check-sudo ## Instalar utilidades y herramientas CLI
+	@bash scripts/tools.sh
+
+dev: check-sudo ## Instalar herramientas de desarrollo
+	@bash scripts/dev.sh
 
 stow: ## Enlazar los dotfiles en $(HOME) con stow
 	@bash scripts/stow.sh
