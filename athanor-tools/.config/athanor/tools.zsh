@@ -18,6 +18,7 @@ path=(
 
 if [[ -o interactive ]]; then
   command -v fzf >/dev/null && source <(fzf --zsh)
-  command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
+  command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"
   command -v navi >/dev/null && eval "$(navi widget zsh)"
+  command -v lazygit >/dev/null && alias lg='lazygit'
 fi
