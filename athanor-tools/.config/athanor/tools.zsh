@@ -21,4 +21,5 @@ if [[ -o interactive ]]; then
   command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"
   command -v navi >/dev/null && eval "$(navi widget zsh)"
   command -v lazygit >/dev/null && alias lg='lazygit'
+  command -v nvim >/dev/null && alias n='nvim'
 fi
