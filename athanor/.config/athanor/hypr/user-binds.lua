@@ -40,6 +40,10 @@ function M.setup(hl)
 	-- hl.bind(mainMod .. " + SHIFT + up", hl.dsp.window.move({ direction = "up" }))
 	-- hl.bind(mainMod .. " + SHIFT + down", hl.dsp.window.move({ direction = "down" }))
 
+	-- Screenshots (hyprshot)
+	hl.bind("Print", hl.dsp.exec_cmd("hyprshot -m output -m active"))
+	hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m window"))
+
 	-- Window resize
 	hl.bind(mainMod .. " + ALT + left", hl.dsp.window.resize({ x = -40, y = 0, relative = true }))
 	hl.bind(mainMod .. " + ALT + right", hl.dsp.window.resize({ x = 40, y = 0, relative = true }))
