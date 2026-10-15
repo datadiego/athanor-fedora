@@ -39,3 +39,8 @@ fi
 
 # Personal shell from `make tools` / `make dev` (opt-in).
 [[ -r ~/.config/athanor/tools.zsh ]] && source ~/.config/athanor/tools.zsh
+
+# Make `cd` use zoxide (frecency navigation) when it is installed.
+if [[ -o interactive ]]; then
+  command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"
+fi

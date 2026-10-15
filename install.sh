@@ -181,7 +181,7 @@ zshrc() {
 
 hyprconf=$config/hypr/hyprland.conf
 hyprlua=$config/hypr/hyprland.lua
-zsh_body='[[ -r ~/.config/athanor/athanor.zsh ]] && source ~/.config/athanor/athanor.zsh'
+zsh_body='[[ -r ~/.config/athanor/athanor.zsh ]] && source ~/.config/athanor/athanor.zsh'$'\n''command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"'
 hypr_body='source = ~/.config/athanor/hypr/athanor.conf'
 hypr_binds='source = ~/.config/athanor/hypr/binds.conf'
 # require() needs an absolute path.

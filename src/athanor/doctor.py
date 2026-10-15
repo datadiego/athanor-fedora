@@ -163,7 +163,8 @@ def _block_check(area: str, path: Path, line: str) -> Result:
 
 
 def check_zsh() -> list[Result]:
-    line = "[[ -r ~/.config/athanor/athanor.zsh ]] && source ~/.config/athanor/athanor.zsh"
+    line = ("[[ -r ~/.config/athanor/athanor.zsh ]] && source ~/.config/athanor/athanor.zsh\n"
+            'command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"')
     return [_block_check("shell", _zshrc(), line)]
 
 
