@@ -19,6 +19,7 @@ class TerminalFont(NamedTuple):
 TERMINAL_FONTS = {
     "tandy": TerminalFont("Px437 Tandy2K", 16, bold="Px437 AT&T PC6300", italic="Ttyp0"),
     "terminus": TerminalFont("Terminus (TTF)", 16, italic="Ttyp0"),
+    "terminess": TerminalFont("Terminess Nerd Font Mono", 16),
     "cozette": TerminalFont("CozetteVector", 13),
     "compaq": TerminalFont("Px437 CompaqThin 8x16", 16, bold="Px437 CompaqThin Overstrike"),
     "vga": TerminalFont("PxPlus IBM VGA 8x16", 16, bold="PxPlus IBM VGA Overstrike"),

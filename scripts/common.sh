@@ -12,26 +12,43 @@ if ! command -v uv >/dev/null 2>&1; then
   curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
 
-# DepartureMono es la fuente por defecto de la terminal y no viene en los repos de
-# Fedora, así que se baja el release de Nerd Fonts al directorio de usuario.
+# Fuentes Nerd Font para la terminal (no vienen en los repos de Fedora, así que
+# se bajan los releases de Nerd Fonts al directorio de usuario).
 fonts="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
-if ! fc-list 2>/dev/null | grep -qi "DepartureMono Nerd Font"; then
-  mkdir -p "$fonts"
-  tmp=$(mktemp -d)
-  trap 'rm -rf "$tmp"' EXIT
-  curl -fsSL -o "$tmp/DepartureMono.zip" \
-    https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/DepartureMono.zip
-  unzip -j -o -q "$tmp/DepartureMono.zip" "DepartureMonoNerdFontMono-Regular.otf" -d "$fonts" || true
-  fc-cache -f "$fonts"
-fi
+mkdir -p "$fonts"
 
-# IosevkaTerm es otra fuente para la terminal; se baja el release de Nerd Fonts.
-if ! fc-list 2>/dev/null | grep -qi "IosevkaTerm Nerd Font"; then
-  mkdir -p "$fonts"
+# Instala una fuente Nerd Font si todavía no está registrada en fontconfig.
+# Argumentos: nombre url_zip archivo_dentro_del_zip nombre_para_fc-list
+install_nerd_font() {
+  local name="$1" url="$2" file="$3" grep_name="$4"
+  if fc-list 2>/dev/null | grep -qi "$grep_name"; then
+    return 0
+  fi
+  local tmp
   tmp=$(mktemp -d)
-  trap 'rm -rf "$tmp"' EXIT
-  curl -fsSL -o "$tmp/IosevkaTerm.zip" \
-    https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/IosevkaTerm.zip
-  unzip -j -o -q "$tmp/IosevkaTerm.zip" "IosevkaTermNerdFontMono-Regular.ttf" -d "$fonts" || true
-  fc-cache -f "$fonts"
-fi
+  curl -fsSL -o "$tmp/$name.zip" "$url"
+  unzip -j -o -q "$tmp/$name.zip" "$file" -d "$fonts" || true
+  rm -rf "$tmp"
+}
+
+install_nerd_font "DepartureMono" \
+  "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/DepartureMono.zip" \
+  "DepartureMonoNerdFontMono-Regular.otf" \
+  "DepartureMono Nerd Font"
+
+install_nerd_font "IosevkaTerm" \
+  "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/IosevkaTerm.zip" \
+  "IosevkaTermNerdFontMono-Regular.ttf" \
+  "IosevkaTerm Nerd Font"
+
+install_nerd_font "Terminus" \
+  "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/Terminus.zip" \
+  "TerminessNerdFontMono-Regular.ttf" \
+  "Terminess Nerd Font"
+
+install_nerd_font "ProggyClean" \
+  "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/ProggyClean.zip" \
+  "ProggyCleanNerdFontMono-Regular.ttf" \
+  "ProggyClean Nerd Font"
+
+fc-cache -f "$fonts"
