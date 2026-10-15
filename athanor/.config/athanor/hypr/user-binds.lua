@@ -9,7 +9,7 @@ function M.setup(hl)
 	hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 	hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("firefox --new-window"))
 	hl.bind(mainMod .. " + Y", hl.dsp.exec_cmd("firefox --new-window youtube.com"))
-	hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(terminal .. " -e btop"))
+	--hl.bind(mainMod .. " + P", hl.dsp.exec_cmd(terminal .. " -e btop"))
 	-- hl.bind(mainMod .. " + N", function()
 	-- 	local state_file = os.getenv("HOME") .. "/.config/hypr/.layout_toggle_state"
 	-- 	local current = "dwindle"
@@ -45,6 +45,11 @@ function M.setup(hl)
 	hl.bind(mainMod .. " + ALT + right", hl.dsp.window.resize({ x = 40, y = 0, relative = true }))
 	hl.bind(mainMod .. " + ALT + up", hl.dsp.window.resize({ x = 0, y = -40, relative = true }))
 	hl.bind(mainMod .. " + ALT + down", hl.dsp.window.resize({ x = 0, y = 40, relative = true }))
+end
+
+if hl ~= nil then
+  M.setup(hl)
+
 end
 
 return M
