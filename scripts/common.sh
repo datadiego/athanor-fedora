@@ -11,3 +11,16 @@ sudo dnf install -y zsh ImageMagick curl unzip fontconfig perl stow
 if ! command -v uv >/dev/null 2>&1; then
   curl -LsSf https://astral.sh/uv/install.sh | sh
 fi
+
+# DepartureMono es la fuente por defecto de la terminal y no viene en los repos de
+# Fedora, así que se baja el release de Nerd Fonts al directorio de usuario.
+fonts="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+if ! fc-list 2>/dev/null | grep -qi "DepartureMono Nerd Font"; then
+  mkdir -p "$fonts"
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL -o "$tmp/DepartureMono.zip" \
+    https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/DepartureMono.zip
+  unzip -j -o -q "$tmp/DepartureMono.zip" "DepartureMonoNerdFontMono-Regular.otf" -d "$fonts" || true
+  fc-cache -f "$fonts"
+fi
