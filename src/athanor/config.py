@@ -26,6 +26,8 @@ TERMINAL_FONTS = {
     "proggyclean": TerminalFont("ProggyClean Nerd Font Mono", 16),
     "departure": TerminalFont("DepartureMono Nerd Font Mono", 11),
     "departuremono": TerminalFont("DepartureMono Nerd Font Mono", 11),
+    "iosevka": TerminalFont("IosevkaTerm Nerd Font Mono", 11),
+    "iosevkaterm": TerminalFont("IosevkaTerm Nerd Font Mono", 11),
 }
 
 # Traced bitmap faces that only stay crisp on multiples of their native grid.

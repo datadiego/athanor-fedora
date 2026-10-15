@@ -24,3 +24,14 @@ if ! fc-list 2>/dev/null | grep -qi "DepartureMono Nerd Font"; then
   unzip -j -o -q "$tmp/DepartureMono.zip" "DepartureMonoNerdFontMono-Regular.otf" -d "$fonts" || true
   fc-cache -f "$fonts"
 fi
+
+# IosevkaTerm es otra fuente para la terminal; se baja el release de Nerd Fonts.
+if ! fc-list 2>/dev/null | grep -qi "IosevkaTerm Nerd Font"; then
+  mkdir -p "$fonts"
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL -o "$tmp/IosevkaTerm.zip" \
+    https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/IosevkaTerm.zip
+  unzip -j -o -q "$tmp/IosevkaTerm.zip" "IosevkaTermNerdFontMono-Regular.ttf" -d "$fonts" || true
+  fc-cache -f "$fonts"
+fi
