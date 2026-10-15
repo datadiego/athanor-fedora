@@ -87,29 +87,14 @@ On Fedora:
 
 ```sh
 sudo dnf install make stow -y
-git clone https://github.com/datadiego/athanor-fedora
-cd athanor-fedora
+git clone https://github.com/datadiego/athanor-fedora .dotfiles
+cd .dotfiles
 make install
+sudo chsh -s /usr/bin/zsh
+# personal environment tools
+make tools
+make dev
 ```
-
-`make install` installs the system packages (Hyprland comes from the
-`sdegler/hyprland` COPR), fetches the fonts, installs the `athanor` command
-with `uv` and links the dotfiles into `~/.config` with `stow` from the
-`athanor/` tree.
-
-| target | what it does |
-|---|---|
-| `make help` | list the targets |
-| `make shell` | the shell layer only |
-| `make desktop` | the desktop layer (implies shell) |
-| `make notch` | desktop + the Hyprland notch plugin |
-| `make packages` | only the system packages (dnf + COPR) |
-| `make tools` | install the CLI utilities and enable the personal shell config |
-| `make dev` | install the development tools and enable the personal shell config |
-| `make stow` / `make unstow` | link / remove the dotfiles |
-| `make untools` | remove only the personal shell config |
-| `make render` | redraw the palettes and wallpapers |
-| `make uninstall` / `make purge` | remove Athanor |
 
 `./install.sh` still works underneath: `./install.sh --dry-run` prints what it
 would do and `./install.sh shell` installs just the shell layer.
