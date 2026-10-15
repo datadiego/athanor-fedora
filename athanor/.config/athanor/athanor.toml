@@ -24,11 +24,11 @@ pixel_scale = 0
 # A plate for each workspace. false keeps level 1's on all of them.
 levels = true
 # tandy, terminus, cozette, compaq or vga. Applies at the next transmute.
-terminal_font = "tandy"
+terminal_font = "terminus"
 # Terminal font size in px. 0 uses the face's native size. The pixel faces
 # (tandy, compaq, vga) snap to the nearest multiple of their grid (16, 32,
 # 48...); terminus and cozette scale freely. Applies at the next transmute.
-terminal_size = 0
+terminal_size = 20
 
 [transmute]
 # Change scheme with the time of day: umber at night, then vellum, orpiment
