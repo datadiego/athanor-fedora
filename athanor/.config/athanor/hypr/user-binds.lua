@@ -1,8 +1,10 @@
 local M = {}
 
 local mainMod = "SUPER"
+local fileManager = "nautilus"
+local terminal = "foot"
 
-function M.setup(hl, terminal, fileManager)
+function M.setup(hl)
 	-- Apps
 	hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 	hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("firefox --new-window"))
