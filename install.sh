@@ -291,7 +291,7 @@ install_shell() {
     say "For the Helix theme, set theme = \"athanor\" in $config/helix/config.toml."
     say "For the tabs and mode badge, set bufferline = \"always\" and color-modes = true under [editor]."
   fi
-  if command -v nvim >/dev/null && ! grep -rqs 'colorscheme.*athanor' "$config/nvim"; then
+  if command -v nvim >/dev/null && ! grep -Rqs 'colorscheme.*athanor' "$config/nvim"; then
     say "For the nvim theme, add vim.cmd.colorscheme(\"athanor\") to your config. Lualine has a theme called athanor too."
   fi
   if command -v micro >/dev/null && ! grep -qs '"colorscheme": *"athanor"' "$config/micro/settings.json"; then
