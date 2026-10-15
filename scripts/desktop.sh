@@ -9,7 +9,7 @@ sudo dnf install -y \
   hyprland hyprlock hypridle hyprpaper \
   waybar mako fuzzel foot swaybg \
   libnotify grim slurp wl-clipboard brightnessctl playerctl
-
+sudo dnf install hyprshot -y
 # Fedora no trae los símbolos de Nerd Fonts como paquete, así que se baja el
 # set al directorio de usuario.
 fonts="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
