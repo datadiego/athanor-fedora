@@ -1,0 +1,10 @@
+{
+    "openf": {
+        "prefix": "openf",
+        "body": [
+            "with open(\"${1:file.txt}\", \"${2|r,w,a,rb,wb,ab|}\") as f:",
+            "    ${3:content} = f.${4:read()}"
+        ],
+        "description": "Read file with open()"
+    }
+}

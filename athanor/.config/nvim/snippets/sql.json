@@ -1,0 +1,125 @@
+{
+  "insertInto": {
+    "prefix": "insert",
+    "body": [
+      "INSERT INTO ${1:tabla} (${2:columnas})",
+      "VALUES (${3:valores});"
+    ],
+    "description": "Inserta valores en una tabla"
+  },
+
+  "updateTable": {
+    "prefix": "update",
+    "body": [
+      "UPDATE ${1:tabla}",
+      "SET ${2:columna = valor}",
+      "WHERE ${3:condición};"
+    ],
+    "description": "Actualiza valores de una tabla con condición"
+  },
+
+  "createSQLite": {
+    "prefix": "createSQLite",
+    "body": [
+      "CREATE TABLE ${1:tabla} (",
+      "  ${2:id} INTEGER PRIMARY KEY AUTOINCREMENT,",
+      "  ${3:columna1} ${4|INTEGER,REAL,BLOB,TEXT,NULL|},",
+      "  created_at DATETIME DEFAULT CURRENT_TIMESTAMP",
+      ");"
+    ],
+    "description": "Crea una tabla nueva"
+  },
+
+  "columnSQLite": {
+    "prefix": "columnSQLite",
+    "body": [
+      "${1:columna} ${2|INTEGER,REAL,BLOB,TEXT,NULL|} ${3|NOT NULL,DEFAULT 'valor',UNIQUE|},"
+    ],
+    "description": "Define una columna en SQLite"
+  },
+
+  "createMySQL": {
+    "prefix": "createMySQL",
+    "body": [
+      "CREATE TABLE ${1:tabla} (",
+      "  ${2:id} INT AUTO_INCREMENT PRIMARY KEY,",
+      "  ${3:columna1} ${4|TINYINT,SMALLINT,MEDIUMINT,INT,BIGINT,FLOAT,REAL,CHAR(n),VARCHAR(n),ENUM('val1', 'val2'),SET('val1', 'val2'),DATE,DATETIME,TIMESTAMP,TIME,YEAR|},",
+      "  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+      ");"
+    ],
+    "description": "Crea una tabla nueva en MySQL"
+  },
+
+  "createPostgreSQL": {
+    "prefix": "createPostgreSQL",
+    "body": [
+      "CREATE TABLE ${1:tabla} (",
+      "  ${2:id} INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,",
+      "  ${3:columna1} ${4|SMALLINT,INTEGER,BIGINT,REAL,DOUBLE PRECISION,CHAR(n),VARCHAR(n),TEXT,DATE,TIMESTAMP WITH TIME ZONE,TIMESTAMP WITHOUT TIME ZONE,TIME WITH TIME ZONE,TIME WITHOUT TIME ZONE,BOOLEAN|},",
+      "  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+      ");"
+    ],
+    "description": "Crea una tabla nueva en PostgreSQL"
+  },
+
+  "columnMySQL": {
+    "prefix": "columnMySQL",
+    "body": [
+      "${1:columna} ${2|TINYINT,SMALLINT,MEDIUMINT,INT,BIGINT,FLOAT,REAL,CHAR(n),VARCHAR(n),ENUM('val1', 'val2'),SET('val1', 'val2'),DATE,DATETIME,TIMESTAMP,TIME,YEAR|} ${3|NOT NULL,DEFAULT 'valor',UNIQUE|},"
+    ],
+    "description": "Define una columna en MySQL"
+  },
+
+  "columnPostgreSQL": {
+    "prefix": "columnPostgreSQL",
+    "body": [
+      "${1:columna} ${2|SMALLINT,INTEGER,BIGINT,REAL,DOUBLE PRECISION,CHAR(n),VARCHAR(n),TEXT,DATE,TIMESTAMP WITH TIME ZONE,TIMESTAMP WITHOUT TIME ZONE,TIME WITH TIME ZONE,TIME WITHOUT TIME ZONE,BOOLEAN|} ${3|NOT NULL,DEFAULT 'valor',UNIQUE|},"
+    ],
+    "description": "Define una columna en PostgreSQL"
+  },
+
+  "createView": {
+    "prefix": "createView",
+    "body": [
+      "CREATE VIEW ${1:vista} AS",
+      "SELECT ${2:columnas}",
+      "FROM ${3:tabla}",
+      "WHERE ${4:condición};"
+    ],
+    "description": "Crea una vista basada en una consulta"
+  },
+
+  "join": {
+    "prefix": "join",
+    "body": [
+      "SELECT ${1:columnas}",
+      "FROM ${2:tabla1}",
+      "JOIN ${3:tabla2} ON ${4:tabla1.columna = tabla2.columna};"
+    ],
+    "description": "Realiza una unión entre dos tablas"
+  },
+  "dropAllPostgreSQL": {
+    "prefix": "dropAllPostgreSQL",
+    "body": [
+      "DROP SCHEMA public CASCADE;",
+      "CREATE SCHEMA public;"
+    ],
+    "description": "Elimina todas las tablas en PostgreSQL"
+  },
+
+"functionPostgre": {
+  "prefix": "functionPostgre",
+  "body": [
+    "CREATE OR REPLACE FUNCTION ${1:nombre_funcion}(${2:parametros})",
+    "RETURNS ${3:tipo_retorno} AS \\$\\$",
+    "DECLARE",
+    "  ${4:variables}",
+    "BEGIN",
+    "  ${5:cuerpo_funcion}",
+    "END;",
+    "\\$\\$ LANGUAGE plpgsql;"
+  ],
+  "description": "Crea una función en PostgreSQL"
+}
+}
+

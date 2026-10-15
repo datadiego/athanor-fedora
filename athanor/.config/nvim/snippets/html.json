@@ -1,0 +1,31 @@
+{
+  "table": {
+    "prefix": "table",
+    "body": [
+      "<table>",
+      "  <thead>",
+      "    <tr>",
+      "      <th>${1:Header 1}</th>",
+      "  </thead>",
+      "  <tbody>",
+      "    <tr>",
+      "      <td>${2:Data 1}</td>",
+      "    </tr>",
+      "  </tbody>",
+      "</table>"
+    ],
+    "description": "Estructura básica de una tabla HTML"
+  },
+
+  "form": {
+    "prefix": "form",
+    "body": [
+      "<form action=\"${1:/submit}\" method=\"${2:post}\">",
+      "  <label for=\"${3:input}\">${4:Label}:</label>",
+      "  <input type=\"${5:text}\" id=\"${3:input}\" name=\"${6:name}\">",
+      "  <button type=\"submit\">Submit</button>",
+      "</form>"
+    ],
+    "description": "Estructura básica de un formulario HTML"
+  }
+}

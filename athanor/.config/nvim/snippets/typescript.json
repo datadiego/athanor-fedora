@@ -1,0 +1,82 @@
+{
+  "fetchGet": {
+    "prefix": "fetchGet",
+    "body": [
+      "fetch('${1:url}')",
+      "  .then((response: Response) => response.${2|json,text|}())",
+      "  .then((data: ${3:any}) => {",
+      "    console.log(data);",
+      "  })",
+      "  .catch((error: unknown) => {",
+      "    console.error('Error:', error);",
+      "  });"
+    ],
+    "description": "Hace un fetch GET en TypeScript"
+  },
+
+  "fetchPost": {
+    "prefix": "fetchPost",
+    "body": [
+      "fetch('${1:url}', {",
+      "  method: 'POST',",
+      "  headers: {",
+      "    'Content-Type': 'application/json'",
+      "  },",
+      "  body: JSON.stringify(${2:data})",
+      "})",
+      "  .then((response: Response) => response.${3|json,text|}())",
+      "  .then((data: ${4:any}) => {",
+      "    console.log(data);",
+      "  })",
+      "  .catch((error: unknown) => {",
+      "    console.error('Error:', error);",
+      "  });"
+    ],
+    "description": "Hace un fetch POST con JSON en TypeScript"
+  },
+
+  "fetchAsync": {
+  "prefix": "fetchAsync",
+  "body": [
+    "try {",
+    "  const response: Response = await fetch('${1:url}');",
+    "  if (!response.ok) {",
+    "    throw new Error(`HTTP error! status: ${response.status}`);",
+    "  }",
+    "  const data: ${2:any} = await response.${3|json,text|}();",
+    "  console.log(data);",
+    "} catch (error: unknown) {",
+    "  console.error('Error:', error);",
+    "}"
+  ],
+  "description": "Fetch con async/await en TypeScript"
+},
+
+  "tryCatch": {
+  "prefix": "tryc",
+  "body": [
+    "try {",
+    "  ${1:// código}",
+    "} catch (error: unknown) {",
+    "  console.error(error);",
+    "}"
+  ],
+  "description": "Bloque try/catch en TypeScript"
+},
+
+  "expressRoute": {
+  "prefix": "route",
+  "body": [
+    "router.${1|get|post|put|delete|}('${2:/ruta}', async (req: Request, res: Response) => {",
+    "  try {",
+    "    ${3:// lógica}",
+    "    res.json(${4:{}});",
+    "  } catch (error: unknown) {",
+    "    res.status(500).json({ error: 'Error interno' });",
+    "  }",
+    "});"
+  ],
+  "description": "Ruta de Express tipada en TypeScript"
+}
+}
+

@@ -1,0 +1,114 @@
+{
+  "expressEndpoint": {
+    "prefix": "route",
+    "body": [
+      "app.${1|get,post,put,delete|}('${2:/ruta}', (req, res) => {",
+      "  ${3:// tu código aquí}",
+      "  res.${4|send,json|}(${5});",
+      "});"
+    ],
+    "description": "Crea un endpoint en Express"
+  },
+
+  "expressApp": {
+    "prefix": "expressApp",
+    "body": [
+      "${1|const express = require('express');,import express from 'express';|}",
+      "const app = express();",
+      "const PORT = process.env.PORT || ${2:3000};",
+      "",
+      "app.use(express.json());",
+      "",
+      "app.listen(PORT, () => {",
+      "  console.log(`Servidor corriendo en el puerto ${PORT}`);",
+      "});"
+    ],
+    "description": "Configura una aplicación básica de Express"
+  },
+
+  "fetchGet": {
+    "prefix": "fetchGet",
+    "body": [
+      "fetch('${1:url}')",
+      "  .then(response => response.${2|json,text|}())",
+      "  .then(data => {",
+      "    console.log(data);",
+      "  })",
+      "  .catch(error => {",
+      "    console.error('Error:', error);",
+      "  });"
+    ],
+    "description": "Hace un fetch GET"
+  },
+
+  "fetchPost": {
+    "prefix": "fetchPost",
+    "body": [
+      "fetch('${1:url}', {",
+      "  method: 'POST',",
+      "  headers: {",
+      "    'Content-Type': 'application/json'",
+      "  },",
+      "  body: JSON.stringify(${2:data})",
+      "})",
+      "  .then(response => response.${3|json,text|}())",
+      "  .then(data => {",
+      "    console.log(data);",
+      "  })",
+      "  .catch(error => {",
+      "    console.error('Error:', error);",
+      "  });"
+    ],
+    "description": "Hace un fetch POST con JSON"
+  },
+
+  "qs": {
+  "prefix": "qs",
+  "body": [
+    "const ${1:element} = document.querySelector('${2:selector}');"
+  ],
+  "description": "querySelector rápido"
+},
+
+  "qsa": {
+  "prefix": "qsa",
+  "body": [
+    "const ${1:elements} = document.querySelectorAll('${2:selector}');"
+  ],
+  "description": "querySelectorAll rápido"
+  },
+
+  "createElement": {
+  "prefix": "createElement",
+  "body": [
+    "const ${1:element} = document.createElement('${2:tag}');"
+  ],
+  "description": "Crear y agregar un elemento al DOM"
+},
+
+  "appendChild": {
+  "prefix": "appendChild",
+  "body": [
+    "${1:parent}.appendChild(${2:child});"
+  ],
+  "description": "appendChild rápido"
+},
+
+  "class": {
+  "prefix": "class",
+  "body": [
+    "class ${1:Nombre} {",
+    "  constructor(${2:params}) {",
+    "    ${3:// init}",
+    "  }",
+    "",
+    "  ${4:metodo}() {",
+    "    ${5:// lógica}",
+    "  }",
+    "}"
+  ],
+  "description": "Plantilla de clase JS"
+}
+
+}
+
