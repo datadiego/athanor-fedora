@@ -111,6 +111,10 @@ targets the shell stays exactly as Athanor ships it. `make untools` removes it.
 The prompt names each terminal window after its folder, or after the command
 running in it. Set `ATHANOR_TITLE=0` in your `.zshrc` to keep your own titles.
 
+Athanor activa el sistema de autocompletado de zsh (`compinit`) con menú
+interactivo, colores, coincidencia case-insensitive y sugerencias inline de
+historial (estilo fish) si el plugin `zsh-autosuggestions` está instalado.
+
 The terminal uses a pixel font, `tandy` by default. Pick another with
 `terminal_font` under `[display]` in `athanor.toml` and size it with
 `terminal_size` (px, 0 for the face's native size), then `make render`. The

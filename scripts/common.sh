@@ -5,7 +5,11 @@ set -euo pipefail
 
 # zsh es el shell de Athanor; el resto lo necesita el instalador de fuentes
 # (imagemagick, perl, curl, unzip) y las plantillas de temas.
-sudo dnf install -y zsh ImageMagick curl unzip fontconfig perl stow
+sudo dnf install -y zsh ImageMagick curl unzip fontconfig perl stow || true
+
+# zsh-autosuggestions da sugerencias de historial al estilo fish. No siempre está
+# en los repos de Fedora; si no se encuentra, el usuario puede instalarlo a mano.
+sudo dnf install -y zsh-autosuggestions || true
 
 # uv no se empaqueta de forma fiable en Fedora: se instala con el script oficial.
 if ! command -v uv >/dev/null 2>&1; then

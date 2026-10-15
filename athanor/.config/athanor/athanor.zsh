@@ -1,3 +1,36 @@
+# --- Autocompletado estilo fish ---
+autoload -Uz compinit
+compinit
+
+# Menú interactivo con flechas (como fish)
+zstyle ':completion:*' menu select
+
+# Colores basados en LS_COLORS
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# Case-insensitive y coincidencia parcial
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# Descripciones y agrupación en el menú
+zstyle ':completion:*:descriptions' format '%F{8}%d%f'
+zstyle ':completion:*:messages' format '%F{8}%d%f'
+zstyle ':completion:*:warnings' format '%F{1}No hay coincidencias para: %d%f'
+zstyle ':completion:*' group-name ''
+
+# Sugerencias inline de historial (estilo fish). Requiere el plugin zsh-autosuggestions.
+for _zsh_as in \
+  /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  "$HOME/.config/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  ; do
+  if [[ -r $_zsh_as ]]; then
+    source "$_zsh_as"
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+    break
+  fi
+done
+unset _zsh_as
+
 autoload -Uz vcs_info
 setopt prompt_subst
 zstyle ':vcs_info:*' enable git

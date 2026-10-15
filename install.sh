@@ -279,6 +279,19 @@ install_fonts() {
 install_shell() {
   say "installing the shell layer"
   install_packages shell
+
+  # zsh-autosuggestions: dnf primero, github como fallback.
+  # Da sugerencias de historial al estilo fish en el prompt.
+  if [[ ! -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    say "instalando zsh-autosuggestions desde GitHub"
+    run mkdir -p "$HOME/.zsh"
+    if [[ -d $HOME/.zsh/zsh-autosuggestions ]]; then
+      run git -C "$HOME/.zsh/zsh-autosuggestions" pull --ff-only
+    else
+      run git -C "$HOME/.zsh" clone https://github.com/zsh-users/zsh-autosuggestions zsh-autosuggestions
+    fi
+  fi
+
   install_fonts
 
   say "installing the athanor command"
