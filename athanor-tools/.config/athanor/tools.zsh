@@ -22,4 +22,5 @@ if [[ -o interactive ]]; then
   command -v navi >/dev/null && eval "$(navi widget zsh)"
   command -v lazygit >/dev/null && alias lg='lazygit'
   command -v nvim >/dev/null && alias n='nvim'
+  alias la='ls -la'
 fi
