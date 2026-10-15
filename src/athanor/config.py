@@ -22,10 +22,14 @@ TERMINAL_FONTS = {
     "cozette": TerminalFont("CozetteVector", 13),
     "compaq": TerminalFont("Px437 CompaqThin 8x16", 16, bold="Px437 CompaqThin Overstrike"),
     "vga": TerminalFont("PxPlus IBM VGA 8x16", 16, bold="PxPlus IBM VGA Overstrike"),
+    "proggy": TerminalFont("ProggyClean Nerd Font Mono", 16),
+    "proggyclean": TerminalFont("ProggyClean Nerd Font Mono", 16),
+    "departure": TerminalFont("DepartureMono Nerd Font Mono", 11),
+    "departuremono": TerminalFont("DepartureMono Nerd Font Mono", 11),
 }
 
 # Traced bitmap faces that only stay crisp on multiples of their native grid.
-PIXEL_FONTS = {"tandy", "compaq", "vga"}
+PIXEL_FONTS = {"tandy", "compaq", "vga", "departure", "departuremono"}
 
 
 def terminal_px(font: str, size: int = 0) -> tuple[int, int]:
