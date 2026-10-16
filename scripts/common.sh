@@ -45,6 +45,11 @@ install_nerd_font "IosevkaTerm" \
   "IosevkaTermNerdFontMono-Regular.ttf" \
   "IosevkaTerm Nerd Font"
 
+install_nerd_font "Iosevka" \
+  "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/Iosevka.zip" \
+  "IosevkaNerdFontMono-Regular.ttf" \
+  "Iosevka Nerd Font"
+
 install_nerd_font "Terminus" \
   "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.5.1/Terminus.zip" \
   "TerminessNerdFontMono-Regular.ttf" \

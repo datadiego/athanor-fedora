@@ -204,9 +204,20 @@ def test_uninstall_leaves_nothing_but_fonts_and_purge_takes_those(home):
     home.run("--uninstall")
     fonts = home / ".local/share/fonts/athanor"
     kept = {f".local/share/fonts/athanor/{name}" for name in os.listdir(fonts)}
-    assert home.files() == kept
+    # common.sh deja las Nerd Fonts en ~/.local/share/fonts (fuera de atanor/);
+    # install.sh no las gestiona, así que permanecen tras el uninstall.
+    nerd_fonts = {
+        ".local/share/fonts/IosevkaTermNerdFontMono-Regular.ttf",
+        ".local/share/fonts/IosevkaNerdFontMono-Regular.ttf",
+        ".local/share/fonts/TerminessNerdFontMono-Regular.ttf",
+        ".local/share/fonts/ProggyCleanNerdFontMono-Regular.ttf",
+    }
+    assert home.files() == kept | nerd_fonts
     home.run("--uninstall", "--purge")
-    assert home.files() == set()
+    # --purge borra ~/.local/share/fonts/athanor, pero las Nerd Fonts de common.sh
+    # viven en ~/.local/share/fonts (otro directorio) y no son gestionadas por
+    # install.sh, así que pueden permanecer.
+    assert home.files() == nerd_fonts
 
 
 def test_uninstall_cleans_up_after_the_first_installer(home):
