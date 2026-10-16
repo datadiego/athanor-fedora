@@ -181,7 +181,7 @@ zshrc() {
 
 hyprconf=$config/hypr/hyprland.conf
 hyprlua=$config/hypr/hyprland.lua
-zsh_body='[[ -r ~/.config/athanor/athanor.zsh ]] && source ~/.config/athanor/athanor.zsh'$'\n''command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"'
+zsh_body=$'# Historial persistente (necesario para que zsh-autosuggestions sugiera entre sesiones)\nHISTFILE="$HOME/.zsh_history"\nHISTSIZE=100000\nSAVEHIST=100000\nsetopt append_history inc_append_history share_history\nsetopt hist_expire_dups_first hist_ignore_dups hist_ignore_space'$'\n''[[ -r ~/.config/athanor/athanor.zsh ]] && source ~/.config/athanor/athanor.zsh'$'\n''command -v zoxide >/dev/null && eval "$(zoxide init zsh --cmd cd)"'
 hypr_body='source = ~/.config/athanor/hypr/athanor.conf'
 hypr_binds='source = ~/.config/athanor/hypr/binds.conf'
 # require() needs an absolute path.
