@@ -43,10 +43,8 @@ sudo dnf install -y navi
 # zoxide
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
-# Nerd fonts
-# wget -q https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
-# unzip -o JetBrainsMono.zip -d ~/.local/share/fonts
-# fc-cache -f -v
+# Nerd fonts: se instalan en scripts/common.sh con install_nerd_font.
+# (Antes se bajaba a mano JetBrainsMono.zip desde este archivo.)
 
 #tetro-tui
 URL="https://github.com/Strophox/tetro-tui/releases/download/v3.1.0/tetro-tui_v3.1_x86_64-unknown-linux-gnu.zip"

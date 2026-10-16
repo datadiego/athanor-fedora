@@ -29,6 +29,8 @@ TERMINAL_FONTS = {
     "departuremono": TerminalFont("DepartureMono Nerd Font Mono", 11),
     "iosevka": TerminalFont("Iosevka Nerd Font Mono", 11),
     "iosevkaterm": TerminalFont("IosevkaTerm Nerd Font Mono", 11),
+    "jetbrains": TerminalFont("JetBrains Mono Nerd Font Mono", 11),
+    "jetbrainsmono": TerminalFont("JetBrains Mono Nerd Font Mono", 11),
 }
 
 # Traced bitmap faces that only stay crisp on multiples of their native grid.

@@ -209,6 +209,7 @@ def test_uninstall_leaves_nothing_but_fonts_and_purge_takes_those(home):
     nerd_fonts = {
         ".local/share/fonts/IosevkaTermNerdFontMono-Regular.ttf",
         ".local/share/fonts/IosevkaNerdFontMono-Regular.ttf",
+        ".local/share/fonts/JetBrainsMonoNerdFontMono-Regular.ttf",
         ".local/share/fonts/TerminessNerdFontMono-Regular.ttf",
         ".local/share/fonts/ProggyCleanNerdFontMono-Regular.ttf",
     }
