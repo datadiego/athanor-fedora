@@ -1,6 +1,6 @@
 # About Athanor
 
-This is a modified and personal version for [athanor](https://github.com/script-wizards/athanor) by script-wizards, using fedora as base distro instead of arch, and adding extra tools, fonts and dotfiles i use in my environment.
+This is a modified and personal version for [athanor](https://github.com/script-wizards/athanor) by script-wizards, using fedora as base distro instead of arch, and adding extra tools, fonts and dotfiles i use in my environment. Please refer to the original repo for a full knowledge of what athanor adds to hyprland.
 
 ## Install
 
