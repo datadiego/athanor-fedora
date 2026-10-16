@@ -40,6 +40,13 @@ hl.config({
 })
 
 hl.on("hyprland.start", function()
+    -- Activa la sesion grafica de systemd. Sin esto (Hyprland lanzado por
+    -- start-hyprland, sin uwsm) graphical-session.target queda inactivo y
+    -- xdg-desktop-portal no puede arrancar => apps GTK4 no ven el modo oscuro.
+    hl.exec_cmd("systemctl --user start hyprland-session.target")
+    -- Modo oscuro por defecto. Con el portal ya en marcha, esto llega a las
+    -- apps GTK4/libadwaita (Nautilus y demas) a traves del Settings portal.
+    hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
     hl.exec_cmd(bin .. " wake --no-wall && hyprpaper --config " .. home .. "/current/hypr/hyprpaper.conf")
     hl.exec_cmd(bin .. " stages --follow")
     hl.exec_cmd("waybar --config " .. home .. "/waybar/config.jsonc --style " .. home .. "/current/waybar/style.css")

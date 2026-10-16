@@ -1,0 +1,11 @@
+# Hyprland se lanza con start-hyprland (sin uwsm), que no activa
+# graphical-session.target. Sin ese target, xdg-desktop-portal no arranca
+# (tiene Requisite=graphical-session.target) y las apps GTK4/libadwaita no
+# reciben el modo oscuro. Este target lo arranca como dependencia, que es lo
+# unico que systemd permite para uno con RefuseManualStart.
+[Unit]
+Description=Hyprland session
+Documentation=man:systemd.special(7)
+BindsTo=graphical-session.target
+Wants=graphical-session.target
+After=graphical-session-pre.target
